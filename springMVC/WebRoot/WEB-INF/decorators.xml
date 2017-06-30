@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<decorators defaultdir="/decorators">
+	<decorator name="manager" page="manager_layout.jsp">
+		<pattern>/default/manager/*</pattern>
+	</decorator>
+
+	<excludes>
+		<pattern>/default/manager/static/*</pattern>
+	</excludes>
+</decorators>
