@@ -1,4 +1,4 @@
-package com.deilsky.springmvc.dao.impl;
+package com.tereda.yikang.dao.impl;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -14,9 +14,9 @@ import org.hibernate.SessionFactory;
 import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
 
-import com.deilsky.springmvc.dao.BaseDao;
-import com.deilsky.springmvc.utils.PageModel;
-import com.deilsky.springmvc.utils.ParamSet;
+import com.tereda.yikang.dao.BaseDao;
+import com.tereda.yikang.utils.PageModel;
+import com.tereda.yikang.utils.ParamSet;
 
 @Repository
 @SuppressWarnings("unchecked")
@@ -94,7 +94,7 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 
 	@Override
 	public Map<String, Object> getMap(String sql, ArrayList<Object> param) {
-		Query query = session().createSQLQuery(sql.toLowerCase());
+		Query query = session().createSQLQuery(sql);
 		ParamSet.setParams(query, param);
 		Map<String, Object> data = (Map<String, Object>) query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP).uniqueResult();
 		return data;
@@ -118,18 +118,22 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 
 	@Override
 	public PageModel getPageModelByConditions(PageModel page, String sql, ArrayList<Object> param) {
-		String _sql = sql.toLowerCase();
+		/*String basesql = sql.toLowerCase();
 		StringBuffer sqlCount = new StringBuffer("select count(0) ");
-		int start = _sql.indexOf("from");
-		int end = _sql.indexOf("group by") == -1 ? (_sql.indexOf("order by") == -1 ? _sql.length() : _sql.indexOf("order by")) : _sql.length();
-		sqlCount.append(_sql.substring(start, end));
-		Query querycount = session().createSQLQuery(sqlCount.toString().toLowerCase());
+		int start = basesql.indexOf("from");
+		int end = basesql.indexOf("group by") == -1 ? (basesql.indexOf("order by") == -1 ? basesql.length() : basesql.indexOf("order by")) : sql.length();
+		sqlCount.append(basesql.substring(start, end));
+		Query querycount = session().createSQLQuery(sqlCount.toString());
 		ParamSet.setParams(querycount, param);
 		int total = ((BigInteger) querycount.uniqueResult()).intValue();
 		int first = (page.getPage() - 1) * page.getPageSize();
 		int max = page.getPageSize();
+		*/
 		Query query = session().createSQLQuery(sql);
 		ParamSet.setParams(query, param);
+		int total = query.list().size();
+		int first = (page.getPage() - 1) * page.getPageSize();
+		int max = page.getPageSize();
 		List<Map<String, String>> result = query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP).setFirstResult(first).setMaxResults(max).list();
 		page.setTotal(total);
 		page.setResult(result);
